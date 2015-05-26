@@ -1,0 +1,13 @@
+.idea
+.idea/*
+.DS_Store
+node_modules
+LeiaCore-latest.min.js
+*.psd
+*.typeface.js
+*.webm
+*.jpg
+*.png
+*.html
+*.png
+
