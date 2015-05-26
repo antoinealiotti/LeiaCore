@@ -10,7 +10,6 @@ var LEIA = {
         SS4X  : 'supersample4x'
     },
     RENDER_MODES : {
-        SINGLE  : 0,
         TILES   : 1,
         SWIZZLE : 2
     }
@@ -463,7 +462,7 @@ function LeiaHoloScreen(leiaDisplay, parameters) {
         };
 
         this.init(leiaDisplay, parameters);
-    }
+    };
 
     this.checkUpdate = function() {
         if (this.matricesNeedUpdate){
@@ -542,6 +541,7 @@ function LeiaHoloScreen(leiaDisplay, parameters) {
             }
         }
     };
+
     this.init(leiaDisplay);
 }
 
@@ -569,9 +569,8 @@ function LeiaRenderer(leiaDisplay, leiaHoloScreen, parameters) {
     this.outputGeometry        = new THREE.PlaneGeometry(this.width, this.height);
     this.outputMesh            = new THREE.Mesh(new THREE.PlaneGeometry(this.width, this.height), this.currentShaderMaterial)
     this.shifterCookie         = LeiaCookieHandler;
-    this.canvasShiftXY         = new THREE.Vector2(this.shifterCookie.getItem('LeiaShiftX'), this.shifterCookie.getItem('LeiaShiftY')); //new THREE.Vector2(3, 7); // XXX XXX XXX
+    this.canvasShiftXY         = new THREE.Vector2(this.shifterCookie.getItem('LeiaShiftX'), this.shifterCookie.getItem('LeiaShiftY'));
 //    this.canvasShiftXY         = new THREE.Vector2(leiaDisplay.info.canvasShift.x, leiaDisplay.info.canvasShift.y); //new THREE.Vector2(3, 7); // XXX XXX XXX
-//    this.canvasShiftXY         = THREE.Vector2(0, 0); // XXX XXX XXX
     this.canvasRotation        = leiaDisplay.info.canvasRotation;
     this.orthoCamera           = new THREE.OrthographicCamera(this.width / -2, this.width / 2, this.height / 2, this.height / -2, -1, 1);
     this.cannedScene           = new THREE.Scene();
@@ -697,7 +696,7 @@ function LeiaRenderer(leiaDisplay, leiaHoloScreen, parameters) {
         this.renderer.setScissor (0, 0, this.canvasWidth, this.canvasHeight);
         this.renderer.enableScissorTest(true);
         this.renderer.render(this.outputScene, this.orthoCamera);
-    }
+    };
 
      this.resetCentralCamera = function(leiaHoloScreen) {
         var cameraFOV = 50;
@@ -797,7 +796,7 @@ function LeiaRenderer(leiaDisplay, leiaHoloScreen, parameters) {
         }
 
         return new Blob([ia], {type:mimeString});
-    }
+    };
 
     this.saveCanvas = function(prefix) {
         var a = document.createElement("a");
