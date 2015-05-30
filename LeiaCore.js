@@ -568,9 +568,8 @@ function LeiaRenderer(leiaDisplay, leiaHoloScreen, parameters) {
     this.outputScene           = new THREE.Scene;
     this.outputGeometry        = new THREE.PlaneGeometry(this.width, this.height);
     this.outputMesh            = new THREE.Mesh(new THREE.PlaneGeometry(this.width, this.height), this.currentShaderMaterial)
-    this.shifterCookie         = LeiaCookieHandler;
-    this.canvasShiftXY         = new THREE.Vector2(this.shifterCookie.getItem('LeiaShiftX'), this.shifterCookie.getItem('LeiaShiftY'));
-//    this.canvasShiftXY         = new THREE.Vector2(leiaDisplay.info.canvasShift.x, leiaDisplay.info.canvasShift.y); //new THREE.Vector2(3, 7); // XXX XXX XXX
+    this.shifterCookie         = null;
+    this.canvasShiftXY         = null;
     this.canvasRotation        = leiaDisplay.info.canvasRotation;
     this.orthoCamera           = new THREE.OrthographicCamera(this.width / -2, this.width / 2, this.height / 2, this.height / -2, -1, 1);
     this.cannedScene           = new THREE.Scene();
@@ -578,6 +577,8 @@ function LeiaRenderer(leiaDisplay, leiaHoloScreen, parameters) {
     this.timer0                = Date.now() * 0.001;
     this.timer1                = Date.now() * 0.001;
     this.timer                 = 0;
+    this.textures              = [];
+    this.XXX_shadowTexture     = null;
 
 
     this.setMultiViewMode = function(multiViewMode){
@@ -603,7 +604,6 @@ function LeiaRenderer(leiaDisplay, leiaHoloScreen, parameters) {
         leiaHoloScreen.setMode(this.currentModeId);
         console.log('LeiaCore: Preparing shaders for render mode ['+leiaHoloScreen.currentMode.modeId+'].');
         this.textures = [];
-
         var cm           = leiaHoloScreen.currentMode;
         var mvp          = leiaHoloScreen.multiViewParameters;
         var textureSizeX = cm.numberOfTilesOnTexture.x * mvp.tileResolution.x;
@@ -684,7 +684,7 @@ function LeiaRenderer(leiaDisplay, leiaHoloScreen, parameters) {
 
     this.doRender = function(scene, leiaHoloScreen) {
         this.updateRenderer(leiaHoloScreen);
-        this.renderTiles(scene, leiaHoloScreen, this.textures, false);
+        this.renderTiles(scene, leiaHoloScreen, this.textures);
         this.displayOutput();
     };
 
@@ -692,6 +692,7 @@ function LeiaRenderer(leiaDisplay, leiaHoloScreen, parameters) {
         this.outputScene.remove(this.outputMesh);
         this.outputMesh = new THREE.Mesh(this.outputGeometry, this.currentShaderMaterial)
         this.outputScene.add(this.outputMesh);
+        this.renderer.clear();
         this.renderer.setViewport(0, 0, this.canvasWidth, this.canvasHeight);
         this.renderer.setScissor (0, 0, this.canvasWidth, this.canvasHeight);
         this.renderer.enableScissorTest(true);
@@ -725,7 +726,7 @@ function LeiaRenderer(leiaDisplay, leiaHoloScreen, parameters) {
         return uniforms;
     };
 
-    this.renderTiles = function(scene, leiaHoloScreen, textures, forceClear) {
+    this.renderTiles = function(scene, leiaHoloScreen, textures) {
         this.renderer.setClearColor(new THREE.Color().setRGB(0.0, 0.0, 0.0));
 
         var currentCamera       = this.camera;
@@ -735,9 +736,10 @@ function LeiaRenderer(leiaDisplay, leiaHoloScreen, parameters) {
         var numberOfTilesY      = leiaHoloScreen.currentMode.numberOfTilesOnTexture.y;
         var tileId              = 0; 
         var nbrOfTiles          = leiaHoloScreen.currentMode.numberOfTiles.x * leiaHoloScreen.currentMode.numberOfTiles.y;
-
+        this.renderer.enableScissorTest(true);
         for (var textureNumber = 0; textureNumber < numberOfTextures; textureNumber++){
             var textureOffsetPage = textureNumber * numberOfTilesX * numberOfTilesY;
+            this.renderer.clear(0x000000);
 
             for (var ty = 0; ty < numberOfTilesY; ty++) {
                 var textureOffset = textureOffsetPage + ty*numberOfTilesX;
@@ -745,16 +747,15 @@ function LeiaRenderer(leiaDisplay, leiaHoloScreen, parameters) {
                 for (var tx = 0; tx < numberOfTilesX; tx++) {
                     this.renderer.setViewport(tileResolution.x * tx, tileResolution.y * ty, tileResolution.x, tileResolution.y);
                     this.renderer.setScissor(tileResolution.x * tx, tileResolution.y * ty, tileResolution.x, tileResolution.y);
-                    this.renderer.enableScissorTest(true);
                     tileId = textureOffset + tx;
                     if (tileId < nbrOfTiles) {
                         var projectionMatrix = leiaHoloScreen.projectionMatrices[textureOffset + tx];
                         currentCamera.projectionMatrix.copy( projectionMatrix );
-                            this.textures[textureNumber].sx = tileResolution.x * tx;
-                            this.textures[textureNumber].sy = tileResolution.y * ty;
-                            this.textures[textureNumber].w  = tileResolution.x;
-                            this.textures[textureNumber].h  = tileResolution.y;
-                        this.renderer.render(scene, currentCamera, textures[textureNumber], forceClear);
+                        this.textures[textureNumber].sx = tileResolution.x * tx;
+                        this.textures[textureNumber].sy = tileResolution.y * ty;
+                        this.textures[textureNumber].w  = tileResolution.x;
+                        this.textures[textureNumber].h  = tileResolution.y;
+                        this.renderer.render(scene, currentCamera, this.textures[textureNumber], false);
                     }
                  }
             }
@@ -888,12 +889,12 @@ function LeiaRenderer(leiaDisplay, leiaHoloScreen, parameters) {
     };
 
     this.shiftX = function(shiftX) {
-        this.canvasShiftXY.x = (this.canvasShiftXY.x + shiftX + 8) % 8; //leiaDisplay.numberOfViews.x;
+        this.canvasShiftXY.x = (this.canvasShiftXY.x + shiftX + 8) % 8;
         this.setCanvasShift();
     };
 
     this.shiftY = function(shiftY) {
-        this.canvasShiftXY.y = (this.canvasShiftXY.y + shiftY + 8) % 8; //leiaDisplay.numberOfViews.x;
+        this.canvasShiftXY.y = (this.canvasShiftXY.y + shiftY + 8) % 8;
         this.setCanvasShift();
     };
 
@@ -902,23 +903,48 @@ function LeiaRenderer(leiaDisplay, leiaHoloScreen, parameters) {
         var shiftY = this.canvasShiftXY.y;
         this.shifterCookie.setItem('LeiaShiftX', shiftX);
         this.shifterCookie.setItem('LeiaShiftY', shiftY);
+        var sX = 0;
+        var sY = 0;
         var canRot = this.canvasRotation;
         setTimeout( function() {
             var canvas = document.getElementsByTagName("canvas");
             switch (canRot) {
                 case "0deg":
-                    canvas[0].style.setProperty("transform", "translate("+shiftX.toFixed(2)+"px, "+shiftY.toFixed(2)+"px) ", null); 
+                    sX = shiftX;
+                    sY = shiftY;
                     break;
                 case "90deg":
-                    canvas[0].style.setProperty("transform", "translate("+shiftY.toFixed(2)+"px, "+shiftX.toFixed(2)+"px) ", null); 
+                    sX = shiftY;
+                    sY = 7 - shiftX;
                     break;
                 default:
                     console.log('Warning: wrong canvas rotation setting in configuration file. Please use official LEIA configuration files only.');
             }
+            canvas[0].style.setProperty("transform", "translate("+sX.toFixed(2)+"px, "+shiftY.toFixed(2)+"px) ", null);
         }, 0);
     };
 
+    // function cookieHandler(cookieID, leiaDisplay){
+    //     this.key = null;
+    //     this.range = null;
+    //     this.hasItem = function (key) {
+    //        if (!key) { return false; }
+    //        return (new RegExp("(?:^|;\\s*)" + encodeURIComponent(key).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=")).test(document.cookie);
+    //     };
+
+    //     this.init = function(cookieID, leiaDisplay){
+    //         var info    = leiaDisplay.info;
+    //         this.key = 'LEIA_'+cookieID+'_'+info.model+'_'+info.displayType;
+    //         this.range  = new THREE.Vector2(info.numberOfViews.x, info.numberOfViews.y);
+    //     };
+    //     this.init(cookieID, leiaDisplay);
+    // };
+
     this.init = function(leiaDisplay, leiaHoloScreen, parameters) {
+//        this.shifterCookie    = new cookieHandler('canvasShift', leiaDisplay);
+        this.shifterCookie         = LeiaCookieHandler;
+        this.canvasShiftXY         = new THREE.Vector2(this.shifterCookie.getItem('LeiaShiftX'), this.shifterCookie.getItem('LeiaShiftY'));
+//       this.canvasShiftXY         = new THREE.Vector2(leiaDisplay.info.canvasShift.x, leiaDisplay.info.canvasShift.y); //new THREE.Vector2(3, 7); // XXX XXX XXX
         this.setCanvasShift();
         this.outputScene.add(this.outputMesh);
         this.renderer = new THREE.WebGLRenderer({
