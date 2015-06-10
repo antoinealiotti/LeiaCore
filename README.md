@@ -113,7 +113,7 @@ Let's do it!
 
 ## Build The LeiaCore Objects ##
 
-    var leiaDisplayInfo = new LeiaDisplayInfo('https://www.leiainc.com/latest/LeiaCore/config/displayPrototypeSmall.json');
+    var leiaDisplayInfo = new LeiaDisplayInfo('https://www.leiainc.com/build/LeiaCore/config/displayPrototypeSmall.json');
 
 We now have an instance of LeiaDisplayInfo() as leiaDisplayInfo. This example assumes we are using the displayPrototypeSmall.json LEIA display driver. There are and will be more device driver files such as displayPrototypeSmall.json in the future. Simply choose the appropriate device driver file, and pass its path to LeiaDisplayInfo().
 
@@ -135,7 +135,7 @@ Your script block at the bottom of your HTML file should look exactly like this 
 
     <script>
         // Build The LeiaCore Objects
-        var leiaDisplayInfo = new LeiaDisplayInfo('https://www.leiainc.com/latest/LeiaCore/config/displayPrototypeSmall.json');
+        var leiaDisplayInfo = new LeiaDisplayInfo('https://www.leiainc.com/build/LeiaCore/config/displayPrototypeSmall.json');
         var leiaHoloScreen  = new LeiaHoloScreen(leiaDisplayInfo);
         var leiaRenderer    = new LeiaRenderer(leiaDisplayInfo, leiaHoloScreen);
         var scene = new THREE.Scene();
@@ -183,7 +183,7 @@ At this point, the script block in our HTML should look identical to:
 
     <script>
         // Build The LeiaCore Objects
-        var leiaDisplayInfo = new LeiaDisplayInfo('https://www.leiainc.com/latest/LeiaCore/config/displayPrototypeSmall.json');
+        var leiaDisplayInfo = new LeiaDisplayInfo('https://www.leiainc.com/build/LeiaCore/config/displayPrototypeSmall.json');
         var leiaHoloScreen  = new LeiaHoloScreen(leiaDisplayInfo);
         var leiaRenderer    = new LeiaRenderer(leiaDisplayInfo, leiaHoloScreen);
         var scene = new THREE.Scene();
@@ -209,7 +209,7 @@ At this point, the script block in our HTML should look identical to:
 
     <script>
         // Build The LeiaCore Objects
-        var leiaDisplayInfo = new LeiaDisplayInfo('https://www.leiainc.com/latest/LeiaCore/config/displayPrototypeSmall.json');
+        var leiaDisplayInfo = new LeiaDisplayInfo('https://www.leiainc.com/build/LeiaCore/config/displayPrototypeSmall.json');
         var leiaHoloScreen  = new LeiaHoloScreen(leiaDisplayInfo);
         var leiaRenderer    = new LeiaRenderer(leiaDisplayInfo, leiaHoloScreen);
         var scene = new THREE.Scene();
@@ -238,7 +238,7 @@ At this point, the script block in our HTML should look identical to:
 
     <script>
         // Build The LeiaCore Objects
-        var leiaDisplayInfo = new LeiaDisplayInfo('https://www.leiainc.com/latest/LeiaCore/config/displayPrototypeSmall.json');
+        var leiaDisplayInfo = new LeiaDisplayInfo('https://www.leiainc.com/build/LeiaCore/config/displayPrototypeSmall.json');
         var leiaHoloScreen  = new LeiaHoloScreen(leiaDisplayInfo);
         var leiaRenderer    = new LeiaRenderer(leiaDisplayInfo, leiaHoloScreen);
         var scene = new THREE.Scene();
@@ -272,13 +272,13 @@ The [complete HTML file](https://github.com/LeiaInc/LeiaSingleShape/blob/master/
           }
           </style>
           <script src="https://www.leiainc.com/build/LeiaCore-latest.min.js"></script>
-          <script src="https://www.leiainc.com/latest/LeiaCore/js/helvetiker_regular.typeface.js"></script>
-          <script src="https://www.leiainc.com/latest/LeiaCore/js/helvetiker_bold.typeface.js"></script>
+          <script src="https://www.leiainc.com/build/LeiaCore/js/helvetiker_regular.typeface.js"></script>
+          <script src="https://www.leiainc.com/build/LeiaCore/js/helvetiker_bold.typeface.js"></script>
       </head>
       <body style="margin: 0 0 0 0;"></body>
             <script>
                 // Build The LeiaCore Objects
-                var leiaDisplayInfo = new LeiaDisplayInfo('https://www.leiainc.com/latest/LeiaCore/config/displayPrototypeSmall.json');
+                var leiaDisplayInfo = new LeiaDisplayInfo('https://www.leiainc.com/build/LeiaCore/config/displayPrototypeSmall.json');
                 var leiaHoloScreen  = new LeiaHoloScreen(leiaDisplayInfo);
                 var leiaRenderer    = new LeiaRenderer(leiaDisplayInfo, leiaHoloScreen);
                 var scene = new THREE.Scene();
