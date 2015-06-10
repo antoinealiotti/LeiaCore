@@ -272,8 +272,8 @@ The [complete HTML file](https://github.com/LeiaInc/LeiaSingleShape/blob/master/
           }
           </style>
           <script src="https://www.leiainc.com/build/LeiaCore-latest.min.js"></script>
-          <script src="https://www.leiainc.com/build/LeiaCore/js/helvetiker_regular.typeface.js"></script>
-          <script src="https://www.leiainc.com/build/LeiaCore/js/helvetiker_bold.typeface.js"></script>
+          <script src="https://www.leiainc.com/build/LeiaCoreUtil/js/helvetiker_regular.typeface.js"></script>
+          <script src="https://www.leiainc.com/build/LeiaCoreUtil/js/helvetiker_bold.typeface.js"></script>
       </head>
       <body style="margin: 0 0 0 0;"></body>
             <script>
