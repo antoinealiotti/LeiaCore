@@ -119,7 +119,7 @@ We now have an instance of LeiaDisplayInfo() as leiaDisplayInfo. This example as
 
 Through this instance, we will be able to communicate with the physical device. At the moment all device I/O can be considered read-only. However, we need to retain a hook to the hardware to move to the next step, which is constructing a LeiaHoloScreen() instance. Let's see how thats done now.
 
-    leiaHoloScreen = new LeiaHoloScreen(leiaDisplayInfo);
+    var leiaHoloScreen = new LeiaHoloScreen(leiaDisplayInfo);
 
 Simply pass the instance of LeiaDisplayInfo() to LeiaHoloScreen() and voila! We now have an instance of LeiaHoloScreen() as leiaHoloScreen. 
 
